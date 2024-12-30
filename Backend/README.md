@@ -1,134 +1,101 @@
-# UBER Backend API Documentation
+# Backend API Documentation
 
-## Endpoints
+## `/users/register` Endpoint
 
-### POST /users/register
+### Description
 
-#### Description
-This endpoint is used to register a new user.
+Registers a new user by creating a user account with the provided information.
 
-#### Request Body
-The request body must be a JSON object containing the following fields:
-- `fullname`: An object containing the user's first and last name.
-  - `firstname`: A string representing the user's first name. It must be at least 3 characters long.
-  - `lastname`: A string representing the user's last name. It must be at least 3 characters long.
-- `email`: A string representing the user's email. It must be a valid email address.
-- `password`: A string representing the user's password. It must be at least 6 characters long.
+### HTTP Method
 
-#### Example Request
-```json
-{
-  "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
-  },
-  "email": "john.doe@example.com",
-  "password": "password123"
-}
-```
+`POST`
 
-#### Responses
+### Request Body
 
-- **201 Created**
-  - **Description**: User successfully registered.
-  - **Body**: A JSON object containing the authentication token and user details.
-  - **Example**:
-    ```json
-    {
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-      "user": {
-        "_id": "60d0fe4f5311236168a109ca",
-        "fullname": {
-          "firstname": "John",
-          "lastname": "Doe"
-        },
-        "email": "john.doe@example.com"
-      }
-    }
-    ```
+The request body should be in JSON format and include the following fields:
 
-- **400 Bad Request**
-  - **Description**: Invalid input data or user already exists.
-  - **Body**: A JSON object containing the error message.
-  - **Example**:
-    ```json
-    {
-      "errors": [
-        {
-          "msg": "Invalid Email",
-          "param": "email",
-          "location": "body"
-        }
-      ]
-    }
-    ```
+- `fullname` (object):
+  - `firstname` (string, required): User's first name (minimum 3 characters).
+  - `lastname` (string, optional): User's last name (minimum 3 characters).
+- `email` (string, required): User's email address (must be a valid email).
+- `password` (string, required): User's password (minimum 6 characters).
 
-    ```json
-    {
-      "message": "User already exist"
-    }
-    ```
+### Example Response
 
-### POST /users/login
+- `user` (object):
+  - `fullname` (object).
+    - `firstname` (string): User's first name (minimum 3 characters).
+    - `lastname` (string): User's last name (minimum 3 characters).   
+  - `email` (string): User's email address (must be a valid email).
+  - `password` (string): User's password (minimum 6 characters).
+- `token` (String): JWT Token
 
-#### Description
-This endpoint is used to log in an existing user.
+## `/users/login` Endpoint
 
-#### Request Body
-The request body must be a JSON object containing the following fields:
-- `email`: A string representing the user's email. It must be a valid email address.
-- `password`: A string representing the user's password. It must be at least 6 characters long.
+### Description
 
-#### Example Request
-```json
-{
-  "email": "john.doe@example.com",
-  "password": "password123"
-}
-```
+Authenticates a user using their email and password, returning a JWT token upon successful login.
 
-#### Responses
+### HTTP Method
 
-- **200 OK**
-  - **Description**: User successfully logged in.
-  - **Body**: A JSON object containing the authentication token and user details.
-  - **Example**:
-    ```json
-    {
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-      "user": {
-        "_id": "60d0fe4f5311236168a109ca",
-        "fullname": {
-          "firstname": "John",
-          "lastname": "Doe"
-        },
-        "email": "john.doe@example.com"
-      }
-    }
-    ```
+`POST`
 
-- **400 Bad Request**
-  - **Description**: Invalid input data.
-  - **Body**: A JSON object containing the error message.
-  - **Example**:
-    ```json
-    {
-      "errors": [
-        {
-          "msg": "Invalid Email",
-          "param": "email",
-          "location": "body"
-        }
-      ]
-    }
-    ```
+### Endpoint
 
-- **401 Unauthorized**
-  - **Description**: Invalid email or password.
-  - **Body**: A JSON object containing the error message.
-  - **Example**:
-    ```json
-    {
-      "message": "Invalid email or password"
-    }
-    ```
+`/users/login`
+
+### Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `email` (string, required): User's email address (must be a valid email).
+- `password` (string, required): User's password (minimum 6 characters).
+
+### Example Response
+
+- `user` (object):
+  - `fullname` (object).
+    - `firstname` (string): User's first name (minimum 3 characters).
+    - `lastname` (string): User's last name (minimum 3 characters).   
+  - `email` (string): User's email address (must be a valid email).
+  - `password` (string): User's password (minimum 6 characters).
+- `token` (String): JWT Token
+
+## `/users/profile` Endpoint
+
+### Description
+
+Retrieves the profile information of the currently authenticated user.
+
+### HTTP Method
+
+`GET`
+
+### Authentication
+
+Requires a valid JWT token in the Authorization header:
+`Authorization: Bearer <token>`
+
+### Example Response
+
+- `user` (object):
+  - `fullname` (object).
+    - `firstname` (string): User's first name (minimum 3 characters).
+    - `lastname` (string): User's last name (minimum 3 characters).   
+  - `email` (string): User's email address (must be a valid email).
+
+
+
+## `/users/logout` Endpoint
+
+### Description
+
+Logout the current user and blacklist the token provided in cookie or headers
+
+### HTTP Method
+
+`GET`
+
+### Authentication
+
+Requires a valid JWT token in the Authorization header or cookie:
