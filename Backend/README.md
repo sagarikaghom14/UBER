@@ -2,7 +2,7 @@
 
 ## Endpoints
 
-### POST /user/register
+### POST /users/register
 
 #### Description
 This endpoint is used to register a new user.
@@ -66,5 +66,69 @@ The request body must be a JSON object containing the following fields:
     ```json
     {
       "message": "User already exist"
+    }
+    ```
+
+### POST /users/login
+
+#### Description
+This endpoint is used to log in an existing user.
+
+#### Request Body
+The request body must be a JSON object containing the following fields:
+- `email`: A string representing the user's email. It must be a valid email address.
+- `password`: A string representing the user's password. It must be at least 6 characters long.
+
+#### Example Request
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+#### Responses
+
+- **200 OK**
+  - **Description**: User successfully logged in.
+  - **Body**: A JSON object containing the authentication token and user details.
+  - **Example**:
+    ```json
+    {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "user": {
+        "_id": "60d0fe4f5311236168a109ca",
+        "fullname": {
+          "firstname": "John",
+          "lastname": "Doe"
+        },
+        "email": "john.doe@example.com"
+      }
+    }
+    ```
+
+- **400 Bad Request**
+  - **Description**: Invalid input data.
+  - **Body**: A JSON object containing the error message.
+  - **Example**:
+    ```json
+    {
+      "errors": [
+        {
+          "msg": "Invalid Email",
+          "param": "email",
+          "location": "body"
+        }
+      ]
+    }
+    ```
+
+- **401 Unauthorized**
+  - **Description**: Invalid email or password.
+  - **Body**: A JSON object containing the error message.
+  - **Example**:
+    ```json
+    {
+      "message": "Invalid email or password"
     }
     ```
